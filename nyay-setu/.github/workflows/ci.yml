@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, nyaysetu-demo]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://user:pass@localhost:5432/nyay
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: testsecret
+      S3_BUCKET: test-bucket
+      S3_REGION: ap-south-1
+      S3_ACCESS_KEY: test
+      S3_SECRET: test
+      OPENAI_API_KEY: test
+      SMS_PROVIDER: TWILIO
+      SMS_API_KEY: test
+      SMS_API_SECRET: test
+      SMS_FROM: +911234567890
+      BLOCKCHAIN_RPC_URL: https://rpc-mumbai.maticvigil.com
+      WALLET_PRIVATE_KEY: 0x...
+      SENTRY_DSN: ''
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
+          POSTGRES_DB: nyay
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
