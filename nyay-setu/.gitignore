@@ -1,0 +1,6 @@
+
+# local dev/build
+.next
+dist
+.env.local
+prisma/dev.db
