@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Queue } from 'bullmq';
-import { requireAuth } from '../../../lib/middleware/requireAuth';
+import { requireAuth } from '@lib/middleware/requireAuth';
 
 const podcastQueue = new Queue('podcast', { connection: { url: process.env.REDIS_URL } });
 

@@ -28,13 +28,15 @@ model User {
   lawyerProfile LawyerProfile?
   judgeProfile JudgeProfile?
   notifications Notification[]
-  auditLogs AuditLog[]
+  auditLogs AuditLog[] @relation("UserAuditLogs")
+  attendances Attendance[]
+  documents Document[] @relation("UserDocuments")
 }
 
 model CitizenProfile {
   id String @id @default(cuid())
   user User @relation(fields: [userId], references: [id])
-  userId String
+  userId String @unique
   name String
   dob DateTime?
   cases Case[]
@@ -45,7 +47,7 @@ model CitizenProfile {
 model CourtEmployee {
   id String @id @default(cuid())
   user User @relation(fields: [userId], references: [id])
-  userId String
+  userId String @unique
   courtId String?
   tasks Task[]
 }
@@ -53,7 +55,7 @@ model CourtEmployee {
 model LawyerProfile {
   id String @id @default(cuid())
   user User @relation(fields: [userId], references: [id])
-  userId String
+  userId String @unique
   barId String?
   subscription Subscription?
   assignments LawyerAssignment[]
@@ -62,14 +64,14 @@ model LawyerProfile {
 model JudgeProfile {
   id String @id @default(cuid())
   user User @relation(fields: [userId], references: [id])
-  userId String
+  userId String @unique
   hearings Hearing[]
 }
 
 model Subscription {
   id String @id @default(cuid())
   lawyer LawyerProfile @relation(fields: [lawyerId], references: [id])
-  lawyerId String
+  lawyerId String @unique
   provider String
   status String
   startedAt DateTime @default(now())
@@ -87,6 +89,7 @@ model Case {
   documents Document[]
   evidences Evidence[]
   analyses Analysis[]
+  assignments LawyerAssignment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -158,7 +161,7 @@ model Document {
   url String
   version Int @default(1)
   hash String
-  uploadedBy User @relation(fields: [uploadedById], references: [id])
+  uploadedBy User @relation(fields: [uploadedById], references: [id], name: "UserDocuments")
   uploadedById String
   createdAt DateTime @default(now())
 }
@@ -216,4 +219,5 @@ model AuditLog {
   userId String?
   details String?
   createdAt DateTime @default(now())
+  user User? @relation(fields: [userId], references: [id], name: "UserAuditLogs")
 }

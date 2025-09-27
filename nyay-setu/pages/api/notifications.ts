@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../lib/prisma';
-import { requireAuth } from '../lib/middleware/requireAuth';
+import { prisma } from '@lib/prisma';
+import { requireAuth } from '@lib/middleware/requireAuth';
 
 async function handler(req: NextApiRequest & { user?: any }, res: NextApiResponse) {
   if (req.method === 'GET') {

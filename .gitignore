@@ -1,0 +1,4 @@
+
+# Ignore installed packages
+nyay-setu/node_modules/
+nyay-setu/package-lock.json
