@@ -2,3 +2,9 @@
 # Ignore installed packages
 nyay-setu/node_modules/
 nyay-setu/package-lock.json
+
+# Ignore Next.js build artifacts and dist
+nyay-setu/.next/
+nyay-setu/dist/
+.next/
+dist/
